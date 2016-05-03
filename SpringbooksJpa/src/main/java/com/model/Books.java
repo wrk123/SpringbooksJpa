@@ -15,7 +15,7 @@ public class Books {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="isbn")
-	private int isbn;
+	private long isbn;
 	
 	@NotNull
 	private String bookName;
@@ -24,28 +24,21 @@ public class Books {
 	private String bookDescription;
 	
 	@NotNull
-	private int price;
+	private String price;
 	
 	public Books() {	}
   
-	public Books(int isbn){
+	public Books(long isbn){
 		this.isbn=isbn;
 	}
-	
-	/*public Books(int isbn, String bookName, String bookDescription, int price) {
-		this.isbn = isbn;
-		this.bookName = bookName;
-		this.bookDescription = bookDescription;
-		this.price = price;
-	}*/
 
-	public Books( String bookName, String bookDescription, int price) {
+	public Books( String bookName, String bookDescription, String price) {
 			this.bookName=bookName;
 			this.bookDescription=bookDescription;
 			this.price=price;
 	}
 
-	public int getIsbn() {
+	public long getIsbn() {
 		return isbn;
 	}
 
@@ -69,11 +62,11 @@ public class Books {
 		this.bookDescription = bookDescription;
 	}
 
-	public int getPrice() {
+	public String getPrice() {
 		return price;
 	}
 
-	public void setPrice(int price) {
+	public void setPrice(String price) {
 		this.price = price;
 	}
 		
