@@ -35,11 +35,30 @@ public class User {
 	  
 	  public User() {	}
 	  
-	  @OneToMany
-	  @JoinTable( name="pruchases",joinColumns=@JoinColumn(name="user_id"),
-	  inverseJoinColumns=@JoinColumn(name="isbn")) //its optional using for name configuration of the join table
+	  public User(long id){
+		 this.id=id;
+	  }
+	  
+	  /*public User(long id, String email, String name, int contact, Collection<Books> books) {
+		this.id = id;
+		this.email = email;
+		this.name = name;
+		this.contact = contact;
+		this.books = books;
+	  }*/
+	  
+	  public User(String email, String name, int contact) {
+			this.email = email;
+			this.name = name;
+			this.contact = contact;
+	  }
+
+
+
+	//@OneToMany
+	  //@JoinTable( name="pruchases",joinColumns=@JoinColumn(name="user_id"),inverseJoinColumns=@JoinColumn(name="isbn")) //its optional using for name configuration of the join table
 	    
-		private Collection<Books> vehicle = new ArrayList<Books>();
+		private Collection<Books> books = new ArrayList<Books>();
 
 		public long getId() {
 			return id;
@@ -73,12 +92,12 @@ public class User {
 			this.contact = contact;
 		}
 
-		public Collection<Books> getVehicle() {
-			return vehicle;
+		public Collection<Books> getBooks() {
+			return books;
 		}
 
-		public void setVehicle(Collection<Books> vehicle) {
-			this.vehicle = vehicle;
+		public void setBooks(Collection<Books> books) {
+			this.books = books;
 		}
 
 			

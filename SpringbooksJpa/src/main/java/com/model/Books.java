@@ -27,6 +27,23 @@ public class Books {
 	private int price;
 	
 	public Books() {	}
+  
+	public Books(int isbn){
+		this.isbn=isbn;
+	}
+	
+	/*public Books(int isbn, String bookName, String bookDescription, int price) {
+		this.isbn = isbn;
+		this.bookName = bookName;
+		this.bookDescription = bookDescription;
+		this.price = price;
+	}*/
+
+	public Books( String bookName, String bookDescription, int price) {
+			this.bookName=bookName;
+			this.bookDescription=bookDescription;
+			this.price=price;
+	}
 
 	public int getIsbn() {
 		return isbn;
