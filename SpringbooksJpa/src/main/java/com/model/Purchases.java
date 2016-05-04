@@ -2,6 +2,7 @@ package com.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -25,7 +26,13 @@ public class Purchases {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date creation_time;
 	
-	@OneToOne(fetch = FetchType.LAZY)
+	
+	@Column(name="user_id")
+	private Long user_id;
+	
+	@Column(name="isbn")
+	private Long isbn;
+	/*@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="user_id")
 	private User user;
 	
@@ -33,7 +40,7 @@ public class Purchases {
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="isbn")
 	private Books book;
-	
+	*/
 	public Purchases() {	}
 
 	public Long getOrder_id() {
@@ -52,7 +59,29 @@ public class Purchases {
 		this.creation_time = creation_time;
 	}
 
-	public User getUser() {
+	public Long getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(Long user_id) {
+		this.user_id = user_id;
+	}
+
+	public Long getIsbn() {
+		return isbn;
+	}
+
+	public void setIsbn(Long isbn) {
+		this.isbn = isbn;
+	}
+
+	public Purchases(Date creation_time, Long user_id, Long isbn) {
+		this.creation_time = creation_time;
+		this.user_id = user_id;
+		this.isbn = isbn;
+	}
+
+	/*public User getUser() {
 		return user;
 	}
 
@@ -76,6 +105,13 @@ public class Purchases {
 		this.creation_time = creation_time;
 		this.user = user;
 		this.book = book;
+	}*/
+	
+	@Override
+	public String toString() {
+		return "Exception occurred !!!";
 	}
+	
+	
 	
 }

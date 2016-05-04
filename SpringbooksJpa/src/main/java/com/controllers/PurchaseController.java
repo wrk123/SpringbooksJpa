@@ -1,95 +1,90 @@
 package com.controllers;
 
-import java.util.ArrayList;
+
+import java.text.BreakIterator;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.dao.BooksDAO;
-import com.dao.PurchasesDAO;
-import com.dao.UserDAO;
+import org.springframework.web.bind.annotation.RestController;
+import com.dao.BooksRepository;
+import com.dao.PurchasesRepository;
+import com.dao.UserRepository;
 import com.model.Books;
 import com.model.Purchases;
 import com.model.User;
 
 
-
-
-
-@Controller
+@RestController
 public class PurchaseController {
 
 	@Autowired
-	UserDAO userDAO;
+	UserRepository userDAO;
 	
 	@Autowired
-	BooksDAO booksDAO;
+	BooksRepository booksDAO;
 	
 	@Autowired
-	PurchasesDAO purchaseDAO;
-	
-	
+	PurchasesRepository purchaseDAO;
+		
 	//Method for creating users 
-	@RequestMapping("/createUser")
-	@ResponseBody
-	public String createUser(String email, String name, String contact){
+	@RequestMapping(value="/user",method=RequestMethod.POST)
+	public @ResponseBody User createUser(@RequestBody User userDetails) throws Exception{
 		User user=null;
 		try{
-			user=new User(email,name,contact);
+			user=new User(userDetails.getEmail(),userDetails.getName(),userDetails.getContact());
 			userDAO.save(user);
 			}catch(Exception e){
-				return "Problem occured while saving user :"+e; 
+				throw new Exception("Exception in saving user details...",e);
 			}	
-		  return "User succesfully created! (id = " + user.getId() + ")";
+		  return user;
 	}
-	
-	
+		
 	//Method for creating b 
-	@RequestMapping("/createBook")
-	@ResponseBody
-	public String createBooks(String bookName, String bookDesc, String price){
+	@RequestMapping(value="/book",method=RequestMethod.POST)
+	public @ResponseBody Books createBooks(@RequestBody Books bookDetails) throws Exception{
 		Books book=null;
 		try{
-			book=new Books(bookName,bookDesc,price);
+			book=new Books(bookDetails.getBookName(),bookDetails.getBookDescription(),bookDetails.getPrice());
 			booksDAO.save(book);
 			}catch(Exception e){
-				return "Problem occured while saving book details :"+e; 
+				throw new Exception("Exception in saving book details...",e);
 			}	
-		  return "Book succesfully created! (isbn = " + book.getIsbn() + " name = "+book.getBookName()+")";
+		  return book;
 	}
 
 	//For purchasing books 
-	@RequestMapping("/purchase")
-	@ResponseBody
-	public String purchase(Long user_id, Long isbn){
+	@RequestMapping(value="/purchase",method=RequestMethod.POST)
+	public @ResponseBody Purchases purchase(@RequestBody Purchases purchases)throws Exception{
 		Books book=null;
 		User user=null;
 		Purchases purchase=null;
 		Date creation_date=new Date();
+		
 		try{
-			book=booksDAO.findOne(isbn);
-			user=userDAO.findOne(user_id);
-			System.out.println("book= "+book+" and user= "+user+"");
-			if(book.getIsbn()==0 || user.getId()==0){
-				return "Book with isbn="+isbn+" or user with user id ="+user_id+" not found.";
+			book=booksDAO.findOne(purchases.getIsbn());
+			user=userDAO.findOne(purchases.getUser_id());
+	
+			if(book==null || user==null){
+				throw new Exception("Entered book isbn or user id not found !!!");			
+				 
 			}
-			purchase = new Purchases(creation_date,user,book);
+			if(purchaseDAO.equals(book) && purchaseDAO.equals(user)){
+				throw new Exception("Book already purchased !!!");				
+			
+			}
+			purchase = new Purchases(creation_date,purchases.getUser_id(),purchases.getIsbn());
 			purchaseDAO.save(purchase);
 			
 		}catch(Exception e){
-			return "Exception occured while purchasing book ["+e+"]";
+			throw new Exception("Exception occured in saving book details....",e);
 		}
 		
-		return "Book purchased";
+		return purchase;
 	} 
-	
-	
 		
 }

@@ -6,6 +6,6 @@ import org.springframework.data.repository.CrudRepository;
 import com.model.Books;
 
 @Transactional
-public interface BooksDAO extends CrudRepository<Books, Long>{
+public interface BooksRepository extends CrudRepository<Books, Long>{
 
 }
