@@ -35,6 +35,8 @@ public class PurchaseController {
 	@Autowired
 	PurchasesDAO purchaseDAO;
 	
+	
+	//Method for creating users 
 	@RequestMapping("/createUser")
 	@ResponseBody
 	public String createUser(String email, String name, String contact){
@@ -49,6 +51,7 @@ public class PurchaseController {
 	}
 	
 	
+	//Method for creating b 
 	@RequestMapping("/createBook")
 	@ResponseBody
 	public String createBooks(String bookName, String bookDesc, String price){
@@ -61,7 +64,8 @@ public class PurchaseController {
 			}	
 		  return "Book succesfully created! (isbn = " + book.getIsbn() + " name = "+book.getBookName()+")";
 	}
-	
+
+	//For purchasing books 
 	@RequestMapping("/purchase")
 	@ResponseBody
 	public String purchase(Long user_id, Long isbn){
@@ -87,58 +91,5 @@ public class PurchaseController {
 	} 
 	
 	
-	@RequestMapping("/purchaseBooks")
-	@ResponseBody
-	public String purchaseBooks(Long user_id, Long isbn){
-		Set<Books> book =null;
-		Books bk=null;
-		User user=null;
-		User users=null;
-		try{
-			book = new HashSet<Books>();
-			bk=booksDAO.findOne(isbn);
-			System.out.println(":: Books object ::["+bk.getIsbn()+"]");
-			book.add(bk);
-			users=userDAO.findOne(user_id);
-			//user = new User(users.getEmail(),users.getName(),user.getContact(),book);
-			System.out.println(":: Inside if , user :"+users.getEmail()+","+users.getName()+","+user.getContact());
-			userDAO.save(user);
-			System.out.println("book= "+book+" and user= "+user+"");
-			
-			
-			
-		}catch(Exception e){
-			return "Exception occured while purchasing book ["+e+"]";
-		}
-		
-		return "Book purchased";
-	} 
-	
-	
-	/*@RequestMapping("/books")
-	@ResponseBody
-	public String getAllBooks(){
-		List<Books> books=new ArrayList<Books>();
-		Books book=null;
-		StringBuilder str = new StringBuilder();
-		try{
-				books=(List<Books>) booksDAO.findAll();
-				Iterator iterator = books.iterator();
-				while(iterator.hasNext()){
-				  //String element = (String) iterator.next();
-					book=(Books) iterator.next();
-					str.append(book.getIsbn());
-					str.append(",");
-					str.append(book.getBookName());
-					str.append(",");
-					str.append(book.getPrice());
-					str.append("\n");
-				}
-				
-			}catch(Exception e){
-				return "Problem occured while fetching all books :"+e; 
-			}
-		return "Books present in thedatabase  are "+str;
-	}*/
 		
 }
