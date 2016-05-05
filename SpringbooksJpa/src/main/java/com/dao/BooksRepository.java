@@ -1,11 +1,16 @@
 package com.dao;
 
-import javax.transaction.Transactional;
+import java.util.List;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import com.model.Books;
 
-@Transactional
 public interface BooksRepository extends CrudRepository<Books, Long>{
 
+	@Query("select p from Purchases p")
+	public List<Books> findAll();
+	
+	
+	
 }
