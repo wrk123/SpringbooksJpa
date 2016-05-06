@@ -1,5 +1,6 @@
 package com.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -20,7 +21,7 @@ import javax.persistence.TemporalType;
 
 @Entity
 @Table(name="purchases")
-public class Purchases {
+public class Purchases implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -29,12 +30,17 @@ public class Purchases {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date creationTime;
 	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date lastModifiedTime;
 	
 	@Column(name="user_id")
 	private Long userId;
 	
 	@Column(name="isbn")
 	private Long isbn;
+	
+	@Column(name="isActive")
+	private boolean isActive;
 	
 	@ManyToOne(cascade=CascadeType.ALL,fetch = FetchType.LAZY)
 	@JoinColumn(name="user_id",insertable=false, updatable=false)
@@ -46,68 +52,71 @@ public class Purchases {
 	private Books book;
 	
 	public Purchases() { }
-	
-	public Purchases(Long orderId, Date creation_time, Long user_id, Long isbn) {
+
+	public Purchases(Long orderId, Date creationTime, Date lastModifiedTime, Long userId, Long isbn, boolean isActive,
+			User user, Books book) {
 		super();
 		this.orderId = orderId;
-		this.creationTime = creation_time;
-		this.userId = user_id;
+		this.creationTime = creationTime;
+		this.lastModifiedTime = lastModifiedTime;
+		this.userId = userId;
 		this.isbn = isbn;
+		this.isActive = isActive;
+		this.user = user;
+		this.book = book;
 	}
 
 	public Long getOrderId() {
 		return orderId;
 	}
 
-
-
-	public void setOrder_id(Long orderId) {
+	public void setOrderId(Long orderId) {
 		this.orderId = orderId;
 	}
 
-
-
-	public Date getCreation_time() {
+	public Date getCreationTime() {
 		return creationTime;
 	}
 
-
-
-	public void setCreation_time(Date creation_time) {
-		this.creationTime = creation_time;
+	public void setCreationTime(Date creationTime) {
+		this.creationTime = creationTime;
 	}
 
+	public Date getLastModifiedTime() {
+		return lastModifiedTime;
+	}
 
+	public void setLastModifiedTime(Date lastModifiedTime) {
+		this.lastModifiedTime = lastModifiedTime;
+	}
 
 	public Long getUserId() {
 		return userId;
 	}
 
-
-
-	public void setUser_id(Long userId) {
+	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
-
-
 
 	public Long getIsbn() {
 		return isbn;
 	}
 
-
-
 	public void setIsbn(Long isbn) {
 		this.isbn = isbn;
 	}
 
+	public boolean getIsActive() {
+		return isActive;
+	}
 
+	public void setIsActive(boolean isActive) {
+		this.isActive = isActive;
+	}
 
 	public User getUser() {
 		return user;
 	}
-
-
 
 	public void setUser(User user) {
 		this.user = user;
@@ -123,11 +132,9 @@ public class Purchases {
 
 	@Override
 	public String toString() {
-		return "Purchases [orderId=" + orderId + ", creationTime=" + creationTime + ", userId=" + userId + ", isbn="
-				+ isbn + ", user=" + user + ", book=" + book + "]";
+		return "Purchases [orderId=" + orderId + ", creationTime=" + creationTime + ", lastModifiedTime="
+				+ lastModifiedTime + ", userId=" + userId + ", isbn=" + isbn + ", isActive=" + isActive + ", user="
+				+ user + ", book=" + book + "]";
 	}
-
-	
-	
 	
 }
