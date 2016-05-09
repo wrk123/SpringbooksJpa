@@ -11,7 +11,9 @@ import com.model.Books;
 public interface BooksRepository extends CrudRepository<Books, Long>{
 
 	
-	public List<Books> findAll();
+	List<Books> findAll();
+	
+	List<Books> findByIsActive(boolean isActive);
 	
 	/*@Modifying
 	@Query("update book b set b.isActive = ?1 where b.isbn = ?2")

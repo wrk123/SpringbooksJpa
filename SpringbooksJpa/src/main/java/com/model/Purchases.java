@@ -36,10 +36,10 @@ public class Purchases implements Serializable{
 	@Column(name="user_id")
 	private Long userId;
 	
-	@Column(name="isbn")
+	//@Column(name="isbn")
 	private Long isbn;
 	
-	@Column(name="isActive")
+	//@Column(name="isActive")
 	private boolean isActive;
 	
 	@ManyToOne(cascade=CascadeType.ALL,fetch = FetchType.LAZY)

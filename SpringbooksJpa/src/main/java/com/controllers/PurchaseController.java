@@ -164,21 +164,21 @@ public class PurchaseController {
 		}
 		
 	     //for fetching all the users details 
-		 @RequestMapping(value="/user",method=RequestMethod.GET)
+		 @RequestMapping(value="/user/all",method=RequestMethod.GET)
 		 public @ResponseBody ResponseEntity<List<User>> getAllUsers(){
 			 List<User> user=(List<User>) userDAO.findAll();
 			 return new ResponseEntity<List<User>>(user,HttpStatus.OK);
 		 }
 		 
 		 //for fetching all the book details
-		 @RequestMapping(value="/book",method=RequestMethod.GET)
+		 @RequestMapping(value="/book/all",method=RequestMethod.GET)
 		 public @ResponseBody ResponseEntity<List<Books>> getAllBooks(){
 			 List<Books> books=(List<Books>) booksDAO.findAll();
 			 return new ResponseEntity<List<Books>>(books,HttpStatus.OK);
 		 }
 		 
 		 //for fetching all the purchase details 	
-		 @RequestMapping(value="/purchase",method=RequestMethod.GET)
+		 @RequestMapping(value="/purchase/all",method=RequestMethod.GET)
 		 public @ResponseBody ResponseEntity<List<Purchases>> getAllPurchases(){
 			 List<Purchases> purchase=(List<Purchases>) purchaseDAO.findAll();
 			 Books books=null;
@@ -197,16 +197,29 @@ public class PurchaseController {
 			@RequestMapping(value="/user/{id}",method=RequestMethod.DELETE)
 			public @ResponseBody ResponseEntity<User> deleteUser(@PathVariable Long id)throws Exception{
 				User user=null;
+				List<Purchases> purchase=null;
 				user=userDAO.findOne(id);
 				if(user!=null)
 				{	try{	
 							user.setLastModifiedTime(new Date());
-							if(user.getIsActive())
-								user.setIsActive(false);
+							purchase=purchaseDAO.findByUserId(user.getId());
+							if(user.getIsActive())	
+								{	for(Purchases purch : purchase){			    //getting all the payments of that user and making it offline 
+										purch.setLastModifiedTime(new Date());
+										purch.setIsActive(false);
+									}
+									user.setIsActive(false);
+								}
 							else
-								user.setIsActive(true);
+								{	for(Purchases purch : purchase){
+										purch.setLastModifiedTime(new Date());
+										purch.setIsActive(true);
+									}
+									user.setIsActive(true);
+								}
 							
 							userDAO.save(user);
+							purchaseDAO.save(purchase);								//user status and his payment details also modified
 							return new ResponseEntity<User>(user, HttpStatus.OK);
 						}catch(Exception e){
 							throw new Exception("Could not change status of the user. ",e);
@@ -227,7 +240,6 @@ public class PurchaseController {
 								book.setIsActive(false);
 							else
 								book.setIsActive(true);
-							
 							booksDAO.save(book);
 							return new ResponseEntity<Books>(book, HttpStatus.OK);
 						}catch(Exception e){
@@ -258,4 +270,27 @@ public class PurchaseController {
 					return new ResponseEntity<Purchases>(HttpStatus.NOT_FOUND);  
 			}
 			
+			//get user based on active or inactive
+			@RequestMapping(value="/user/isActive/{isActive}",method=RequestMethod.GET)
+			public @ResponseBody ResponseEntity<List<User>> getAllIsActiveUsers(@PathVariable boolean isActive)throws Exception{
+				List<User> user=null;
+				user=userDAO.findByIsActive(isActive);
+					return new  ResponseEntity<List<User>>(user,HttpStatus.OK);
+			}
+			
+			//get books based on active or inactive
+			@RequestMapping(value="/books/isActive/{isActive}",method=RequestMethod.GET)
+			public @ResponseBody ResponseEntity<List<Books>> getAllIsActiveBooks(@PathVariable boolean isActive)throws Exception{
+				List<Books> book=null;
+				book=booksDAO.findByIsActive(isActive);				
+					return new  ResponseEntity<List<Books>>(book,HttpStatus.OK);
+			}
+
+			//get books based on active or inactive
+			@RequestMapping(value="/purchase/isActive/{isActive}",method=RequestMethod.GET)
+			public @ResponseBody ResponseEntity<List<Purchases>> getAllIsActivePurchases(@PathVariable boolean isActive)throws Exception{
+				List<Purchases> purchase=null;
+				purchase=purchaseDAO.findByIsActive(isActive);
+						return new  ResponseEntity<List<Purchases>>(purchase,HttpStatus.OK);					
+			}
 }
